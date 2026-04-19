@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danylo Tymoshenko – CV</title>
+  <link rel="stylesheet" href="green.css">
+</head>
+<body>
+
+  <header>
+    <h1>Danylo Tymoshenko</h1>
+    <img src="photo.jpg" alt="Zdjęcie Danylo Tymoshenko" class="header-photo">
+    <p class="subtitle">QA Engineer | Web Developer | 66746</p>
+    <button onclick="toggleTheme()">Zmień motyw</button>
+    <button onclick="toggleSection()">Ukryj/Pokaż projekty</button>
+  </header>
+
+  <main>
+
+    <section id="kontakt">
+      <h2>Kontakt</h2>
+      <p>📧 <a href="mailto:dvv.vasilenko@gmail.com">dvv.vasilenko@gmail.com</a></p>
+      <p>📞 <a href="tel:+48575782178">+48 575 782 178</a></p>
+      <p>📍 Warszawa</p>
+      <p>
+        🌐 <a href="https://linkedin.com/in/daniel-tymoshenko-b669b91b4" target="_blank" rel="noopener noreferrer">
+        LinkedIn</a>
+      </p>
+      <p>
+        💻 <a href="https://github.com/DanyloTymoshenko66746" target="_blank" rel="noopener noreferrer">
+        GitHub</a>
+      </p>
+    </section>
+
+    <section id="formularz">
+  <h2>Kontakt (formularz)</h2>
+
+  <form id="contactForm" novalidate>
+    
+    <label>Imię:</label><br>
+    <input type="text" id="firstName" required>
+    <small class="error" id="firstNameError"></small><br><br>
+
+    <label>Nazwisko:</label><br>
+    <input type="text" id="lastName" required>
+    <small class="error" id="lastNameError"></small><br><br>
+
+    <label>Email:</label><br>
+    <input type="email" id="email" required>
+    <small class="error" id="emailError"></small><br><br>
+
+    <label>Wiadomość:</label><br>
+    <textarea id="message" required></textarea>
+    <small class="error" id="messageError"></small><br><br>
+
+    <button type="submit">Wyślij</button>
+  </form>
+</section>
+
+    <section id="o-mnie">
+      <h2>O mnie</h2>
+      <p>
+        Junior QA Engineer z doświadczeniem zdobytym podczas staży i pracy przy realnych projektach.
+        Specjalizuję się w testowaniu manualnym i automatycznym aplikacji webowych.
+        Pracowałem z Selenium, Selenide, Postman oraz Git.
+        Skupiam się na dokładnej dokumentacji, czystym kodzie i efektywnej współpracy zespołowej.
+      </p>
+    </section>
+
+    <section id="umiejetnosci">
+      <h2>Umiejętności</h2>
+      <ul>
+        <li>Java</li>
+        <li>Git / GitHub</li>
+        <li>Selenium / Selenide</li>
+        <li>Postman (API Testing)</li>
+        <li>Docker</li>
+        <li>Testowanie manualne i automatyczne</li>
+      </ul>
+    </section>
+
+    <section id="doswiadczenie">
+      <h2>Doświadczenie</h2>
+
+      <article>
+        <h3>QWERTYSoftware</h3>
+        <p><em>QA Engineer</em> | 10.2025 – obecnie</p>
+        <ul>
+          <li>Debugowanie domen i stron internetowych</li>
+          <li>Testy regresyjne</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>Grid Dynamics</h3>
+        <p><em>Intern QA Engineer (Java Automation)</em> | 12.2024 – 06.2025</p>
+        <ul>
+          <li>Tworzenie dokumentacji testowej</li>
+          <li>Automatyzacja testów frontendowych (Selenium/Selenide)</li>
+          <li>Testowanie API przy użyciu Postman</li>
+        </ul>
+      </article>
+
+    </section>
+
+    <section id="edukacja">
+      <h2>Edukacja</h2>
+      <ul>
+        <li><strong>Vistula University</strong> – Computer Engineering (2023 – obecnie)</li>
+        <li><strong>GOIT</strong> – QA Manual Engineering (2023)</li>
+        <li><strong>EPFK ZNU</strong> – Computer Engineering (2019 – 2023)</li>
+      </ul>
+    </section>
+
+    <section id="projekty">
+      <h2>Projekty</h2>
+      <ul>
+        <li>
+          Portfolio Website – Strona wizytówkowa stworzona w HTML i CSS.
+        </li>
+        <li>
+          Automated Testing Project – Projekt automatyzacji testów w Selenium (Java).
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 Danylo Tymoshenko</p>
+  </footer>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
