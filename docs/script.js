@@ -1,3 +1,4 @@
+
 function toggleTheme() {
     const link = document.querySelector('link[rel="stylesheet"]');
 
@@ -7,6 +8,7 @@ function toggleTheme() {
         link.setAttribute("href", "red.css");
     }
 }
+
 
 function toggleSection() {
     const section = document.getElementById("projekty");
@@ -27,7 +29,7 @@ function loadDataFromJSON() {
             return response.json();
         })
         .then(data => {
-            // skills
+          
             const skillsList = document.getElementById("skillsList");
             if (skillsList) {
                 skillsList.innerHTML = ""; 
@@ -61,11 +63,113 @@ function loadDataFromJSON() {
         });
 }
 
+const STORAGE_KEY = "moje_notatki";
+
+function getNotesFromStorage() {
+    const notesJSON = localStorage.getItem(STORAGE_KEY);
+    if (notesJSON) {
+        return JSON.parse(notesJSON);
+    }
+    return []; 
+}
+
+function saveNotesToStorage(notes) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+}
+
+function renderNotes() {
+    const notesList = document.getElementById("notesList");
+    const notes = getNotesFromStorage();
+    
+    if (!notesList) return;
+    
+    if (notes.length === 0) {
+        notesList.innerHTML = '<li style="color: gray;">📭 Brak notatek. Dodaj pierwszą!</li>';
+        return;
+    }
+    
+    notesList.innerHTML = "";
+    notes.forEach((note, index) => {
+        const li = document.createElement("li");
+        li.style.cssText = `
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+        `;
+        
+        const noteText = document.createElement("span");
+        noteText.textContent = note;
+        noteText.style.flex = "1";
+        
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "🗑️ Usuń";
+        deleteBtn.style.cssText = `
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        `;
+        
+        deleteBtn.addEventListener("click", function() {
+            deleteNote(index);
+        });
+        
+        li.appendChild(noteText);
+        li.appendChild(deleteBtn);
+        notesList.appendChild(li);
+    });
+}
+
+function addNote() {
+    const input = document.getElementById("noteInput");
+    const noteText = input.value.trim();
+    
+    if (noteText === "") {
+        alert("Proszę wpisać treść notatki!");
+        return;
+    }
+    
+    const notes = getNotesFromStorage();
+    notes.push(noteText);
+    saveNotesToStorage(notes);  
+    renderNotes();
+    input.value = "";
+    
+    console.log(`Dodano notatkę: "${noteText}"`);
+}
+
+function deleteNote(index) {
+    const notes = getNotesFromStorage();
+    
+    if (index >= 0 && index < notes.length) {
+        const removedNote = notes[index];
+        notes.splice(index, 1);
+        saveNotesToStorage(notes);
+        renderNotes();
+        console.log(`Usunięto notatkę: "${removedNote}"`);
+    }
+}
+
+function showStorageInfo() {
+    const notes = getNotesFromStorage();
+    console.log(`📦 Local Storage - przechowujesz ${notes.length} notatek:`);
+    notes.forEach((note, i) => {
+        console.log(`  ${i + 1}. ${note}`);
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", function() {
-    
-    loadDataFromJSON();
 
+    loadDataFromJSON();
     const contactForm = document.getElementById("contactForm");
     if (contactForm) {
         contactForm.addEventListener("submit", function(e) {
@@ -123,6 +227,23 @@ document.addEventListener("DOMContentLoaded", function() {
             if (isValid) {
                 alert("Formularz wysłany poprawnie!");
                 contactForm.reset();
+            }
+        });
+    }
+    
+    renderNotes();
+    showStorageInfo();
+    
+    const addBtn = document.getElementById("addNoteBtn");
+    if (addBtn) {
+        addBtn.addEventListener("click", addNote);
+    }
+    
+    const noteInput = document.getElementById("noteInput");
+    if (noteInput) {
+        noteInput.addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                addNote();
             }
         });
     }
