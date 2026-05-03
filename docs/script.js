@@ -1,4 +1,3 @@
-
 function toggleTheme() {
     const link = document.querySelector('link[rel="stylesheet"]');
 
@@ -9,10 +8,8 @@ function toggleTheme() {
     }
 }
 
-
 function toggleSection() {
     const section = document.getElementById("projekty");
-
     if (section.style.display === "none") {
         section.style.display = "block";
     } else {
@@ -20,61 +17,113 @@ function toggleSection() {
     }
 }
 
-document.getElementById("contactForm").addEventListener("submit", function(e) {
-    e.preventDefault();
 
-    let isValid = true;
+function loadDataFromJSON() {
+    fetch("data.json")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Błąd ładowania danych");
+            }
+            return response.json();
+        })
+        .then(data => {
+            // skills
+            const skillsList = document.getElementById("skillsList");
+            if (skillsList) {
+                skillsList.innerHTML = ""; 
+                data.skills.forEach(skill => {
+                    const li = document.createElement("li");
+                    li.textContent = skill;
+                    skillsList.appendChild(li);
+                });
+            }
 
+            const projectsList = document.getElementById("projectsList");
+            if (projectsList) {
+                projectsList.innerHTML = ""; 
+                data.projects.forEach(project => {
+                    const li = document.createElement("li");
+                    li.textContent = project;
+                    projectsList.appendChild(li);
+                });
+            }
+        })
+        .catch(error => {
+            console.error("Błąd ładowania JSON:", error);
+            const skillsList = document.getElementById("skillsList");
+            if (skillsList) {
+                skillsList.innerHTML = "<li>Błąd ładowania umiejętności</li>";
+            }
+            const projectsList = document.getElementById("projectsList");
+            if (projectsList) {
+                projectsList.innerHTML = "<li>Błąd ładowania projektów</li>";
+            }
+        });
+}
+
+
+document.addEventListener("DOMContentLoaded", function() {
     
-    const firstName = document.getElementById("firstName");
-    const lastName = document.getElementById("lastName");
-    const email = document.getElementById("email");
-    const message = document.getElementById("message");
+    loadDataFromJSON();
 
-    const firstNameError = document.getElementById("firstNameError");
-    const lastNameError = document.getElementById("lastNameError");
-    const emailError = document.getElementById("emailError");
-    const messageError = document.getElementById("messageError");
+    const contactForm = document.getElementById("contactForm");
+    if (contactForm) {
+        contactForm.addEventListener("submit", function(e) {
+            e.preventDefault();
 
-    firstNameError.textContent = "";
-    lastNameError.textContent = "";
-    emailError.textContent = "";
-    messageError.textContent = "";
+            let isValid = true;
 
-    const nameRegex = /^[A-Za-zÀ-ž]+$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const firstName = document.getElementById("firstName");
+            const lastName = document.getElementById("lastName");
+            const email = document.getElementById("email");
+            const message = document.getElementById("message");
 
-    if (firstName.value.trim() === "") {
-        firstNameError.textContent = "Imię jest wymagane";
-        isValid = false;
-    } else if (!nameRegex.test(firstName.value)) {
-        firstNameError.textContent = "Imię nie może zawierać cyfr";
-        isValid = false;
-    }
+            const firstNameError = document.getElementById("firstNameError");
+            const lastNameError = document.getElementById("lastNameError");
+            const emailError = document.getElementById("emailError");
+            const messageError = document.getElementById("messageError");
 
-    if (lastName.value.trim() === "") {
-        lastNameError.textContent = "Nazwisko jest wymagane";
-        isValid = false;
-    } else if (!nameRegex.test(lastName.value)) {
-        lastNameError.textContent = "Nazwisko nie może zawierać cyfr";
-        isValid = false;
-    }
+            firstNameError.textContent = "";
+            lastNameError.textContent = "";
+            emailError.textContent = "";
+            messageError.textContent = "";
 
-    if (email.value.trim() === "") {
-        emailError.textContent = "Email jest wymagany";
-        isValid = false;
-    } else if (!emailRegex.test(email.value)) {
-        emailError.textContent = "Niepoprawny email";
-        isValid = false;
-    }
+            const nameRegex = /^[A-Za-zÀ-ž]+$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (message.value.trim() === "") {
-        messageError.textContent = "Wiadomość jest wymagana";
-        isValid = false;
-    }
+            if (firstName.value.trim() === "") {
+                firstNameError.textContent = "Imię jest wymagane";
+                isValid = false;
+            } else if (!nameRegex.test(firstName.value)) {
+                firstNameError.textContent = "Imię nie może zawierać cyfr";
+                isValid = false;
+            }
 
-    if (isValid) {
-        alert("Formularz wysłany poprawnie!");
-        this.reset();
+            if (lastName.value.trim() === "") {
+                lastNameError.textContent = "Nazwisko jest wymagane";
+                isValid = false;
+            } else if (!nameRegex.test(lastName.value)) {
+                lastNameError.textContent = "Nazwisko nie może zawierać cyfr";
+                isValid = false;
+            }
+
+            if (email.value.trim() === "") {
+                emailError.textContent = "Email jest wymagany";
+                isValid = false;
+            } else if (!emailRegex.test(email.value)) {
+                emailError.textContent = "Niepoprawny email";
+                isValid = false;
+            }
+
+            if (message.value.trim() === "") {
+                messageError.textContent = "Wiadomość jest wymagana";
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert("Formularz wysłany poprawnie!");
+                contactForm.reset();
+            }
+        });
     }
 });
