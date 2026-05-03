@@ -84,7 +84,7 @@ function renderNotes() {
     if (!notesList) return;
     
     if (notes.length === 0) {
-        notesList.innerHTML = '<li style="color: gray;">📭 Brak notatek. Dodaj pierwszą!</li>';
+        notesList.innerHTML = '<li style="color: gray;"> Brak notatek. Dodaj pierwszą!</li>';
         return;
     }
     
@@ -107,7 +107,7 @@ function renderNotes() {
         noteText.style.flex = "1";
         
         const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "🗑️ Usuń";
+        deleteBtn.textContent = " Usuń";
         deleteBtn.style.cssText = `
             background-color: #e74c3c;
             color: white;
@@ -160,7 +160,7 @@ function deleteNote(index) {
 
 function showStorageInfo() {
     const notes = getNotesFromStorage();
-    console.log(`📦 Local Storage - przechowujesz ${notes.length} notatek:`);
+    console.log(` Local Storage - przechowujesz ${notes.length} notatek:`);
     notes.forEach((note, i) => {
         console.log(`  ${i + 1}. ${note}`);
     });
