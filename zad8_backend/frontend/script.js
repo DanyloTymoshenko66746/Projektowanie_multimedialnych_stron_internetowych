@@ -29,7 +29,7 @@ function loadDataFromJSON() {
             return response.json();
         })
         .then(data => {
-          
+           
             const skillsList = document.getElementById("skillsList");
             if (skillsList) {
                 skillsList.innerHTML = ""; 
@@ -40,6 +40,7 @@ function loadDataFromJSON() {
                 });
             }
 
+       
             const projectsList = document.getElementById("projectsList");
             if (projectsList) {
                 projectsList.innerHTML = ""; 
@@ -54,14 +55,15 @@ function loadDataFromJSON() {
             console.error("Błąd ładowania JSON:", error);
             const skillsList = document.getElementById("skillsList");
             if (skillsList) {
-                skillsList.innerHTML = "<li>Błąd ładowania umiejętności</li>";
+                skillsList.innerHTML = "<li> Błąd ładowania umiejętności</li>";
             }
             const projectsList = document.getElementById("projectsList");
             if (projectsList) {
-                projectsList.innerHTML = "<li>Błąd ładowania projektów</li>";
+                projectsList.innerHTML = "<li> Błąd ładowania projektów</li>";
             }
         });
 }
+
 
 const STORAGE_KEY = "moje_notatki";
 
@@ -107,7 +109,7 @@ function renderNotes() {
         noteText.style.flex = "1";
         
         const deleteBtn = document.createElement("button");
-        deleteBtn.textContent = "🗑️ Usuń";
+        deleteBtn.textContent = " Usuń";
         deleteBtn.style.cssText = `
             background-color: #e74c3c;
             color: white;
@@ -143,7 +145,7 @@ function addNote() {
     renderNotes();
     input.value = "";
     
-    console.log(`Dodano notatkę: "${noteText}"`);
+    console.log(` Dodano notatkę: "${noteText}"`);
 }
 
 function deleteNote(index) {
@@ -154,15 +156,53 @@ function deleteNote(index) {
         notes.splice(index, 1);
         saveNotesToStorage(notes);
         renderNotes();
-        console.log(`Usunięto notatkę: "${removedNote}"`);
+        console.log(` Usunięto notatkę: "${removedNote}"`);
     }
 }
 
 function showStorageInfo() {
     const notes = getNotesFromStorage();
-    console.log(`📦 Local Storage - przechowujesz ${notes.length} notatek:`);
+    console.log(` Local Storage - przechowujesz ${notes.length} notatek:`);
     notes.forEach((note, i) => {
         console.log(`  ${i + 1}. ${note}`);
+    });
+}
+
+
+function sendFormToBackend(formData, formElement) {
+    ////////////////// CHANGE FOR LOCAL OR RENDER /////////////////////
+
+    //const API_URL = 'http://localhost:3000/api/contact';
+    
+    const API_URL = 'https://projektowanie-multimedialnych-stron.onrender.com/api/contact';
+
+    return fetch(API_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert(` ${data.message}\n\nDziękujemy ${formData.firstName}! Twoja wiadomość została zapisana.`);
+            formElement.reset();
+            return true;
+        } else {
+            alert(` Błąd: ${data.error}`);
+            return false;
+        }
+    })
+    .catch(error => {
+        console.error(' Błąd wysyłania do backendu:', error);
+        alert(' Nie udało się połączyć z serwerem. Upewnij się, że backend działa na http://localhost:3000');
+        return false;
     });
 }
 
@@ -170,6 +210,8 @@ function showStorageInfo() {
 document.addEventListener("DOMContentLoaded", function() {
 
     loadDataFromJSON();
+    
+   
     const contactForm = document.getElementById("contactForm");
     if (contactForm) {
         contactForm.addEventListener("submit", function(e) {
@@ -187,6 +229,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const emailError = document.getElementById("emailError");
             const messageError = document.getElementById("messageError");
 
+        
             firstNameError.textContent = "";
             lastNameError.textContent = "";
             emailError.textContent = "";
@@ -195,6 +238,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const nameRegex = /^[A-Za-zÀ-ž]+$/;
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+          
             if (firstName.value.trim() === "") {
                 firstNameError.textContent = "Imię jest wymagane";
                 isValid = false;
@@ -226,45 +270,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
             if (isValid) {
                 const formData = {
-        firstName: firstName.value.trim(),
-        lastName: lastName.value.trim(),
-        email: email.value.trim(),
-        message: message.value.trim()
-    };
-    
-
-    const API_URL = 'http://localhost:3000/api/contact';
-    
-    fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(` ${data.message}\n\nDziękujemy ${formData.firstName}! Twoja wiadomość została zapisana.`);
-            contactForm.reset();
-        } else {
-            alert(` Błąd: ${data.error}`);
-        }
-    })
-    .catch(error => {
-        console.error('Błąd wysyłania:', error);
-        alert(' Nie udało się połączyć z serwerem. Spróbuj później.');
-    });
+                    firstName: firstName.value.trim(),
+                    lastName: lastName.value.trim(),
+                    email: email.value.trim(),
+                    message: message.value.trim()
+                };
+                
+                sendFormToBackend(formData, contactForm);
             }
         });
+    } else {
+        console.warn("Formularz #contactForm nie znaleziony na stronie");
     }
     
+ 
     renderNotes();
     showStorageInfo();
     
     const addBtn = document.getElementById("addNoteBtn");
     if (addBtn) {
         addBtn.addEventListener("click", addNote);
+    } else {
+        console.warn("Przycisk #addNoteBtn nie znaleziony");
     }
     
     const noteInput = document.getElementById("noteInput");
